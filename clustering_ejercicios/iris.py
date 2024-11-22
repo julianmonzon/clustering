@@ -1,17 +1,19 @@
 """
-Clustering with K-Means and K-Medoids on the Iris Dataset
+Clustering with Multiple Methods on the Iris Dataset
 
-This script demonstrates clustering analysis on the Iris dataset, a popular dataset in machine learning. 
-The features are scaled, and K-Means and K-Medoids clustering algorithms are applied to analyze 
-and compare their clustering performance.
+This script applies various clustering methods to the Iris dataset, including K-Means, K-Medoids,
+Hierarchical Clustering, DBSCAN, and Gaussian Mixture Model (GMM). The script compares their 
+clustering performance and visualizes the results.
 """
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn_extra.cluster import KMedoids
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.datasets import load_iris
+from sklearn.cluster import AgglomerativeClustering, DBSCAN
+from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import load_iris
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Load the Iris dataset
 iris = load_iris()
@@ -36,7 +38,6 @@ plt.show()
 kmeans = KMeans(n_clusters=3, random_state=0).fit(X_scaled)
 df['kmeans'] = kmeans.predict(X_scaled)
 
-# Visualize K-Means clustering results
 sns.pairplot(df, hue='kmeans', palette='viridis')
 plt.title('K-Means Clustering Results')
 plt.show()
@@ -45,7 +46,30 @@ plt.show()
 kmedoids = KMedoids(n_clusters=3, random_state=0).fit(X_scaled)
 df['kmedoids'] = kmedoids.predict(X_scaled)
 
-# Visualize K-Medoids clustering results
 sns.pairplot(df, hue='kmedoids', palette='viridis')
 plt.title('K-Medoids Clustering Results')
+plt.show()
+
+# Apply Hierarchical Clustering (Agglomerative Clustering)
+hierarchical = AgglomerativeClustering(n_clusters=3)
+df['hierarchical'] = hierarchical.fit_predict(X_scaled)
+
+sns.pairplot(df, hue='hierarchical', palette='viridis')
+plt.title('Hierarchical Clustering Results')
+plt.show()
+
+# Apply DBSCAN clustering
+dbscan = DBSCAN(eps=0.9, min_samples=5).fit(X_scaled)
+df['dbscan'] = dbscan.labels_
+
+sns.pairplot(df, hue='dbscan', palette='viridis')
+plt.title('DBSCAN Clustering Results')
+plt.show()
+
+# Apply Gaussian Mixture Model clustering
+gmm = GaussianMixture(n_components=3, random_state=0).fit(X_scaled)
+df['gmm'] = gmm.predict(X_scaled)
+
+sns.pairplot(df, hue='gmm', palette='viridis')
+plt.title('Gaussian Mixture Model Clustering Results')
 plt.show()
